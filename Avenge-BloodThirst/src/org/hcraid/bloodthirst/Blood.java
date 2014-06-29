@@ -1,5 +1,6 @@
 package org.hcraid.bloodthirst;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -45,14 +46,21 @@ public class Blood {
 
 		blood = p.getWorld().dropItem(p.getLocation(), i);
 		
+		Bukkit.broadcastMessage("Dropped blood! - " + p.getName());
+		
 	}
 	
 	public void removeBlood(){
+		
+		Bukkit.broadcastMessage("Removing blood...");
+		
 		blood.remove();
 	}
 	
 	public void placeRedstone(){
 		blood.getLocation().getBlock().setType(Material.REDSTONE_WIRE);
+		
+		Bukkit.broadcastMessage("Placing Redstone...");
 		
 		redstone = blood.getLocation().getBlock();
 	}

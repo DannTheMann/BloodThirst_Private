@@ -1,5 +1,7 @@
 package org.hcraid.bloodthirst;
 
+import java.util.Random;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -13,24 +15,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class DamageListener implements Listener {
 
+	private static final double BLOOD_DROP_CHANCE = 0.9;
+	
 	@EventHandler
 	public void playerDamage(EntityDamageByEntityEvent e) {
 		
 		if(e.getEntity() instanceof Player && e.getDamager() instanceof Player){
 			
-			Player p = (Player) e.getEntity();
-		
-			ItemStack i = new ItemStack(Material.INK_SACK);
+			if(new Random().nextDouble() <= BLOOD_DROP_CHANCE){
+				new Blood((Player)e.getEntity());
+			}
 			
-			i.setDurability((short) 1);
-			
-			ItemMeta im = i.getItemMeta();
-			
-			im.setDisplayName(ChatColor.DARK_RED + p.getName() + "'s blood");
-			
-			i.setItemMeta(im);
-
-			Item is = p.getWorld().dropItem(p.getLocation(), i);
 		}
 	}
 	
