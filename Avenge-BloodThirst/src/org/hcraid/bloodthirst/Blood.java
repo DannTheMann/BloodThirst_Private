@@ -1,6 +1,5 @@
 package org.hcraid.bloodthirst;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,29 +14,36 @@ public class Blood {
 	private Player p;
 	private Block redstone;
 	private Item blood;
-	
-	public Blood(Player p){
+
+	public Blood(Player p) {
 		this.p = p;
-		
-		dropBlood();
-		
-		countDown();
-	}
-	
-	private void countDown() {
-		
+
 		new BukkitRunnable() {
-			
+
+			@Override
+			public void run() {
+
+				dropBlood();
+				countDown();
+			}
+
+		}.runTaskLater(Main.m, 10);
+	}
+
+	private void countDown() {
+
+		new BukkitRunnable() {
+
 			@Override
 			public void run() {
 				placeRedstone();
 				removeBlood();
 			}
-		}.runTaskLater(Main.m, 20*3);
-		
+		}.runTaskLater(Main.m, 20 * 3);
+
 	}
 
-	public void dropBlood(){
+	public void dropBlood() {
 		ItemStack i = new ItemStack(Material.INK_SACK);
 		i.setDurability((short) 1);
 		ItemMeta im = i.getItemMeta();
@@ -45,23 +51,30 @@ public class Blood {
 		i.setItemMeta(im);
 
 		blood = p.getWorld().dropItem(p.getLocation(), i);
-		
-		Bukkit.broadcastMessage("Dropped blood! - " + p.getName());
-		
+
 	}
-	
-	public void removeBlood(){
-		
-		Bukkit.broadcastMessage("Removing blood...");
-		
+
+	public void removeBlood() {
+
 		blood.remove();
 	}
-	
-	public void placeRedstone(){
+
+	public void removeRedstone() {
+		redstone.setType(Material.AIR);
+	}
+
+	public void placeRedstone() {
 		blood.getLocation().getBlock().setType(Material.REDSTONE_WIRE);
-		
-		Bukkit.broadcastMessage("Placing Redstone...");
-		
+
 		redstone = blood.getLocation().getBlock();
+
+		new BukkitRunnable() {
+
+			@Override
+			public void run() {
+				removeRedstone();
+			}
+		}.runTaskLater(Main.m, 20 * 30);
+
 	}
 }
