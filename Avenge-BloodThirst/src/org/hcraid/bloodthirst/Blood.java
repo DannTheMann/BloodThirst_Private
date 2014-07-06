@@ -3,7 +3,6 @@ package org.hcraid.bloodthirst;
 import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
@@ -11,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 public class Blood {
 
@@ -18,6 +18,8 @@ public class Blood {
 	private Block redstone;
 	private Item blood;
 	public static ArrayList<Block> bloodlocation = new ArrayList<Block>();
+	public static ArrayList<Blood> bloodspawn = new ArrayList<Blood>();
+	private BukkitTask bt;
 
 	public Blood(Player p) {
 		this.p = p;
@@ -36,7 +38,7 @@ public class Blood {
 
 	private void countDown() {
 
-		new BukkitRunnable() {
+		bt = new BukkitRunnable() {
 
 			@Override
 			public void run() {
@@ -55,6 +57,7 @@ public class Blood {
 		i.setItemMeta(im);
 
 		blood = p.getWorld().dropItem(p.getLocation(), i);
+		bloodspawn.add(this);
 
 	}
 
@@ -66,6 +69,7 @@ public class Blood {
 	public void removeRedstone() {
 		redstone.setType(Material.AIR);
 		bloodlocation.remove(redstone);
+		bloodspawn.remove(this);
 	}
 
 	public void placeRedstone() {
@@ -82,5 +86,25 @@ public class Blood {
 			}
 		}.runTaskLater(Main.m, 20 * 30);
 
+	}
+
+	public Item getBlood() {
+
+		return blood;
+	}
+	
+	public void stopRunnable(){
+		bt.cancel();
+		bloodspawn.remove(this);
+	}
+	
+	public Block getBloodBlock(){
+		
+		return redstone;
+	}
+
+	public Player getPlayer() {
+		return p;
+		
 	}
 }
