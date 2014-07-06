@@ -1,6 +1,9 @@
 package org.hcraid.bloodthirst;
 
+import java.util.ArrayList;
+
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
@@ -14,6 +17,7 @@ public class Blood {
 	private Player p;
 	private Block redstone;
 	private Item blood;
+	public static ArrayList<Block> bloodlocation = new ArrayList<Block>();
 
 	public Blood(Player p) {
 		this.p = p;
@@ -61,12 +65,14 @@ public class Blood {
 
 	public void removeRedstone() {
 		redstone.setType(Material.AIR);
+		bloodlocation.remove(redstone);
 	}
 
 	public void placeRedstone() {
 		blood.getLocation().getBlock().setType(Material.REDSTONE_WIRE);
 
 		redstone = blood.getLocation().getBlock();
+		bloodlocation.add(redstone);
 
 		new BukkitRunnable() {
 
